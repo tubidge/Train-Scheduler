@@ -10,6 +10,7 @@ var config = {
 firebase.initializeApp(config);
 
 var database = firebase.database();
+var newTrain = {};
 
 $("#submit").on("click", function (event) {
     event.preventDefault();
@@ -18,11 +19,22 @@ $("#submit").on("click", function (event) {
     var time = $("#first-time").val().trim();
     var frequency = $("#frequency").val().trim();
 
-    var newTrain = {
+    var now = moment().unix();
+    var timeConverted = moment(time, "hh:mm").unix();
+    var freqConverted = (frequency * 60);
+    var timeDiff = (now - timeConverted);
+    var minAway = Math.floor((freqConverted - (timeDiff % freqConverted)) / 60);
+    var arrival = moment((now + minAway), "unix").format("HH:mm");
+
+
+
+    newTrain = {
         name: name,
         destination: destination,
         time: time,
-        frequency: frequency
+        frequency: frequency,
+        arrival: arrival,
+        minAway: minAway
     };
 
     database.ref().push(newTrain);
@@ -33,22 +45,23 @@ $("#submit").on("click", function (event) {
 });
 
 database.ref().on("child_added", function (childSnapshot) {
-    console.log(childSnapshot.val());
-
     var name = childSnapshot.val().name;
     var destination = childSnapshot.val().destination;
-    var time = childSnapshot.val().time;
     var frequency = childSnapshot.val().frequency;
+    var arrival = childSnapshot.val().arrival;
+    var minAway = childSnapshot.val().minAway;
+    console.log(`Arrival: ${arrival}`);
 
-    var now = moment().unix();
 
-    // var timeFormatted = moment.unix(time).format("HH:MM");
-    console.log(now);
+
+
 
     var newRow = $("<tr>").append(
         $("<td>").text(name),
         $("<td>").text(destination),
-        $("<td>").text(frequency)
+        $("<td>").text(frequency),
+        $("<td>").text(arrival),
+        $("<td>").text(minAway)
     );
 
     $(".table").append(newRow);
