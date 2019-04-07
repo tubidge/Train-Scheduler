@@ -7,3 +7,5 @@
 * You will then be provided with that train's next arrival time.
 
 * Feel free to add as many trains as you'd like. At least until Google deletes your data.
+
+Link to deployed page on GitHub: https://tubidge.github.io/Train-Scheduler/

@@ -25,6 +25,7 @@ $("#submit").on("click", function (event) {
     var timeDiff = (now - timeConverted);
     var minAway = Math.floor((freqConverted - (timeDiff % freqConverted)) / 60);
     var arrival = moment((now + minAway), "unix").format("HH:mm");
+    // var arrival = moment.unix(now + minAway).format("HH:mm")
 
 
 
